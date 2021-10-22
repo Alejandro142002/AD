@@ -25,7 +25,7 @@ public class LeerRevista  implements Serializable {
 			ois= new ObjectInputStream(fis);
 			Revista RevistaNueva=(Revista) ois.readObject();
 			//Muestro el dato que quiero que salga por pantalla
-			System.out.println(RevistaNueva.getaño());
+			System.out.println(RevistaNueva.getAño());
 			
 			
 			

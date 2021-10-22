@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -41,7 +42,11 @@ public class Pmenu extends JFrame implements ActionListener {
 	static JButton cancelar;
 	static JList<persona> lista;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
+		
+		Connection miConexion=Conexion.conectar();
+		PreparedStatement stnt= miConexion.prepareStatement("select* from personas where nombre like 'juan'");
+		ResultSet r=stnt.executeQuery();
 		new Pmenu();
 
 	}
@@ -143,7 +148,7 @@ public class Pmenu extends JFrame implements ActionListener {
 		}
 
 		
-		persona p = new persona(nombre.getText(), edad.getText());
+		/*persona p = new persona(nombre.getText(), edad.getText());
 		if (Nombretexto.getText().equals("") || Edadtexto.getText().equals("") ) {
 			JOptionPane.showMessageDialog(null, "Debes rellenar todos los apartados");
 		} else {
@@ -154,12 +159,12 @@ public class Pmenu extends JFrame implements ActionListener {
 			}
 			añadirframe.dispose();
 			pack();
-			setVisible(true);
+			setVisible(true);*/
 
 
 
 		}
-	}
+	
 
 	public void editar() {
 			if (lista.getSelectedIndex() >= 0) {
