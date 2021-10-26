@@ -21,7 +21,7 @@ public class insertar {
 		
 		
 		try {
-			Connection miConexion=Conexion.conectar();
+			Connection miConexion=Conexion1.conectar();
 			
 			persona p =new persona(nombre,edad);
 			PreparedStatement insertar=miConexion.prepareStatement("INSERT INTO `personas1`(`nombre`, `edad`) VALUES ('[value-1]','[value-2]')");

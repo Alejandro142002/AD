@@ -14,7 +14,7 @@ public class borrar {
 		String nombre=s.next();
 		
 		try {
-			Connection miConexion=Conexion.conectar();
+			Connection miConexion=Conexion1.conectar();
 			PreparedStatement insertar=miConexion.prepareStatement("DELETE FROM `personas1` WHERE 'nombre'=(?)");
 			borrar.setString(1,nombre);
 			borrar.executeUpdate();

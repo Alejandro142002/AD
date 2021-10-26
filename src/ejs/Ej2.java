@@ -9,7 +9,7 @@ public class Ej2 {
 		
 		Scanner s=new Scanner(System.in);
 		
-		System.out.println("Dime la ruta del directoio");
+		System.out.println("Dime la ruta del directorio");
 		String r=s.next();
 		System.out.println(r);
 		

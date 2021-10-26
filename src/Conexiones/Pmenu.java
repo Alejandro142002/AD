@@ -1,5 +1,6 @@
 package Conexiones;
 import java.awt.BorderLayout;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -27,33 +28,41 @@ import javax.swing.border.EmptyBorder;
 
 public class Pmenu extends JFrame implements ActionListener {
 	static JFrame añadirframe;
-	static JTextField Nombretexto;
-	static JTextField Edadtexto;
-	
-	static JLabel nombre;
-	static JLabel edad;
-	
+	static JTextField Nombre;
+	static JTextField Edad;
 	static JPanel listaPosicion;
-	static JPanel save;
 	static DefaultListModel<persona> dlm;
+	DefaultListModel dm = new DefaultListModel();
 	static JButton añadir;
 	static JButton editar;
 	static JButton guardar;
-	static JButton cancelar;
+	static JButton eliminar;
 	static JList<persona> lista;
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args)  {
 		
-		Connection miConexion=Conexion.conectar();
-		PreparedStatement stnt= miConexion.prepareStatement("select* from personas where nombre like 'juan'");
-		ResultSet r=stnt.executeQuery();
 		new Pmenu();
-
 	}
+	 public void loadlist() {
+		 try {
+	            String query = "select * from persona1";
+	            PreparedStatement pst = Conexion1.conectar().prepareStatement(query);
+	            ResultSet rs = rs = pst.executeQuery();
+	            while (rs.next()) {
+	                dm.addElement(rs.getString("nombre"));
+	            }
+	            lista.setModel(dm);
+	            pst.close();
+	            rs.close();
+
+	        } catch (SQLException throwables) {
+	            throwables.printStackTrace();
+	        }
+	 }	
 
 	public Pmenu() {
 
-		setTitle("Coleccion Peliculas");
+		setTitle("Coleccion Personas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel marco = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		marco.add(añadir = new JButton("Añadir"));
@@ -66,7 +75,7 @@ public class Pmenu extends JFrame implements ActionListener {
 		add(listaPosicion, BorderLayout.NORTH);
 		add(marco, BorderLayout.CENTER);
 
-		marco.add(editar = new JButton("Editar"));
+		marco.add(editar = new JButton("Eliminar"));
 		editar.addActionListener(this);
 		setLocation(850, 450);
 		setMinimumSize(new Dimension(400, 100));
@@ -84,8 +93,8 @@ public class Pmenu extends JFrame implements ActionListener {
 			lista.clearSelection();
 			añadir();
 		}
-		if (botones.equals("Editar")) {
-			editar();
+		if (botones.equals("Eliminar")) {
+			eliminar();
 		}
 		if (botones.equals("Guardar")) {
 			guardar();
@@ -96,20 +105,26 @@ public class Pmenu extends JFrame implements ActionListener {
 		}
 	}
 
+	private void eliminar() {
+		// TODO Auto-generated method stub
+		
+	}
 	public void añadir() {
 		añadirframe = new JFrame();
 		añadirframe.setTitle("Personas");
 		JPanel save = new JPanel(new GridLayout(4, 2, 5, 10));
 		añadirframe.add(save);
 		save.add(new JLabel("Nombre"));
-		save.add(Nombretexto = new JTextField(10));
+		save.add(Nombre = new JTextField(10));
 		save.add(new JLabel("Edad"));
-		save.add(Edadtexto = new JTextField(10));
+		save.add(Edad = new JTextField(10));
 		
 		añadirframe.setMinimumSize(new Dimension(400, 100));
 		añadirframe.setLocation(850, 450);
 
 		save.add(guardar = new JButton("Guardar"));
+		
+		JButton cancelar;
 		save.add(cancelar = new JButton("Cancelar"));
 		cancelar.addActionListener(this);
 		guardar.addActionListener(this);
@@ -120,62 +135,69 @@ public class Pmenu extends JFrame implements ActionListener {
 	}
 
 	public void guardar() {
-		
-		Scanner s=new Scanner(System.in);
 
-		System.out.println("Introduce el nombre de la persona que quieres introducir");
-		String nombre=s.next();
-		System.out.println("Introduce la edad de la persona que quieres introducir");
-		String edad=s.next();
-		
 		
 		try {
-			Connection miConexion=Conexion.conectar();
+			Connection miConexion=Conexion1.conectar();
 			
-			persona p =new persona(nombre,edad);
-			PreparedStatement insertar=miConexion.prepareStatement("INSERT INTO `personas1`(`nombre`, `edad`) VALUES ('[value-1]','[value-2]')");
-			insertar.setString(1, nombre);
-			insertar.setString(2, edad);
-			insertar.executeUpdate();
 			
-			p=new persona(nombre,edad);
-			int i=1;
-			insertar.setString(i++, p.getNombre());
-			insertar.setString(i++,p.getEdad());
+			PreparedStatement insertar=miConexion.prepareStatement("INSERT INTO `personas1`(`nombre`, `edad`) values (?,?)");
+			insertar.setString(1,String.valueOf(Nombre.getText()));
+			insertar.setString(2, String.valueOf(Edad.getText()));
 			insertar.executeUpdate();
 		}catch(SQLException e) {
 			System.out.println("Excecpión "+e);
 		}
+		persona p = new persona(Nombre.getText(), Edad.getText());
+        if (Nombre.getText().equals("") || Edad.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Debes rellenar todos los apartados");
+        } else {
+            if (lista.isSelectionEmpty()) {
+                dlm.addElement(p);
+            } else {
+                dlm.setElementAt(p, lista.getSelectedIndex());
+            }
+            añadirframe.dispose();
+            pack();
+            setVisible(true);
 
+        }
 		
-		/*persona p = new persona(nombre.getText(), edad.getText());
-		if (Nombretexto.getText().equals("") || Edadtexto.getText().equals("") ) {
-			JOptionPane.showMessageDialog(null, "Debes rellenar todos los apartados");
-		} else {
-			if (lista.isSelectionEmpty()) {
-				dlm.addElement(p);
-			} else {
-				dlm.setElementAt(p, lista.getSelectedIndex());
-			}
-			añadirframe.dispose();
-			pack();
-			setVisible(true);*/
-
 
 
 		}
 	
 
-	public void editar() {
-			if (lista.getSelectedIndex() >= 0) {
-				añadir();
-				persona p = (persona)lista.getSelectedValue();
-				Nombretexto.setText(p.getNombre());
-				Edadtexto.setText(p.getEdad());
-				
-			} else {
-				JOptionPane.showMessageDialog(null, "Hay que elegir un elemento de la lista");
-			}
-		}
+	public void Eliminar() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = Conexion1.conectar();
+            preparedStatement = connection.prepareStatement("DELETE FROM person WHERE nombre = ?");
+            preparedStatement.setString(1, String.valueOf(dm));
+            preparedStatement.executeUpdate();
+
+            System.out.println("Ha sido eliminado");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }

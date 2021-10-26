@@ -9,7 +9,7 @@ public class Conexion {
 	private static final String usuario="alejandro";
 	private static final String clave="alumno";
 	
-	public static Connection conectar() {
+	public static Connection conectar1() {
 		
 		Connection conexion= null;
 		

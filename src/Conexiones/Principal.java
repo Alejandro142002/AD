@@ -10,7 +10,7 @@ public class Principal {
 	public static void main(String[] args) {
 		
 		try {
-			Connection miConexion=Conexion.conectar();
+			Connection miConexion=Conexion1.conectar();
 			PreparedStatement stnt= miConexion.prepareStatement("select* from personas where nombre like 'juan'");
 			ResultSet r=stnt.executeQuery();
 			while(r.next()) {
