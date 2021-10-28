@@ -8,19 +8,29 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class AlumnosHandler extends DefaultHandler {
 	private ArrayList<Alumno>alumnos=new ArrayList<Alumno>();
-	Alumno a;
+	private Alumno alumno;
 	private StringBuilder buffer=new StringBuilder();
+	
+	public ArrayList<Alumno> getAlumnos(){
+		return alumnos;
+	}
+	
+	@Override
+	public void characters(char[] ch, int start, int length) throws SAXException {
+		
+		buffer.append(ch,start,length);
+	}
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		// TODO Auto-generated method stub
 		switch(qName) {
 
+		
 		case "alumno":
-			a=new Alumno();
+			alumno=new Alumno();
+			alumnos.add(alumno);
 			break;
-		case "nombre":
-
-			break;
+		case "nombre": 
 		case "edad":
 			buffer.delete(0, buffer.length());
 			break;
@@ -35,24 +45,20 @@ public class AlumnosHandler extends DefaultHandler {
 
 		switch(qName) {
 
-		case "alumno":
-			alumnos.add(a);
-			break;
+		
 		case "nombre":
-			a.getNombre(buffer.toString());
+			alumno.setNombre(buffer.toString());
 			break;
 		case "edad":
-			a.getEdad(Integer.parseInt(buffer.toString()));
+			alumno.setEdad(Integer.parseInt(buffer.toString()));
 			break;
+		
+		
 		}
 	}
 	
 
-	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException {
-		// TODO Auto-generated method stub
-		super.characters(ch, start, length);
-	}
+	
 
 	public ArrayList<Alumno> getAlumno() {
 		// TODO Auto-generated method stub

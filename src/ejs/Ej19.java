@@ -19,8 +19,12 @@ public class Ej19 {
 		AlumnosHandler aHandler= new AlumnosHandler();
 		saxParser.parse(archivo, aHandler);
 		
-		ArrayList<Alumno> alumnos=new ArrayList<Alumno>();
-		alumnos= aHandler.getAlumno();
+		ArrayList<Alumno> alumnos= aHandler.getAlumnos();
+		
+		
+		for(Alumno a:alumnos) {
+			System.out.println(a.toString());
+		}
 
 	}
 
