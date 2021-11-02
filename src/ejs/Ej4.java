@@ -12,7 +12,7 @@ public class Ej4 {
     	Scanner s=new Scanner(System.in);
 		
 		System.out.println("Escribe unas cuantas frases");
-		File f1=new File("D:\\2ºDAM\\AD\\FILE\\src\\ola.txt");
+		File f1=new File("D:\\2ºDAM\\ola.txt");
 		
 		try {
 			FileWriter fw=new FileWriter(f1);

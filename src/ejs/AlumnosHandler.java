@@ -7,6 +7,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class AlumnosHandler extends DefaultHandler {
+	
+	//Creo la lista de alumnos que voy a ir leyendo 
 	private ArrayList<Alumno>alumnos=new ArrayList<Alumno>();
 	private Alumno alumno;
 	private StringBuilder buffer=new StringBuilder();

@@ -13,9 +13,13 @@ import org.xml.sax.SAXException;
 public class Ej19 {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+		//Se le pasa la direccion del xml que se quiere leer
 		File archivo=new File("D:\\2ºDAM\\AD\\ej\\src\\alumnos.xml");
+		//Se crea el SAX Factory
 		SAXParserFactory saxPF=SAXParserFactory.newInstance();
 		SAXParser saxParser= saxPF.newSAXParser();
+		
+		//Se crea el controlador para ir leyendo el xml nodo a nodo
 		AlumnosHandler aHandler= new AlumnosHandler();
 		saxParser.parse(archivo, aHandler);
 		
