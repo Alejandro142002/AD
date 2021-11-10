@@ -8,7 +8,9 @@ public class Conexion1 {
 	private static final String url="jdbc:mysql://localhost:3306/acceso";
 	private static final String usuario="alejandro1";
 	private static final String clave="alumno";
-
+	public static void main ( String args[] ){
+	conectar();
+	}
 public static Connection conectar() {
 		
 		Connection conexion= null;

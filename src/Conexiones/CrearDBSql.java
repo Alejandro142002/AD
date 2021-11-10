@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.sql.Date;
 
 public class CrearDBSql {
@@ -45,8 +46,8 @@ public class CrearDBSql {
 		
 		//Inserta Socios
 		
-		Date fecha=new Date(2000,05,18);
-		Date fecha2=new Date(2002,12,31);
+		Date fecha=new Date(958993891000L);
+		Date fecha2=new Date(1041333091000L);
 		
 		Sextet<Integer, String, String, Date, String, String> auxSocio=new Sextet<Integer, String, String, Date, String, String>(02,"Carmelo","Buisac",fecha,"C/San Alberto","644532134");
 		Sextet<Integer, String, String, Date, String, String> auxSocio1=new Sextet<Integer, String, String, Date, String, String> (005,"Alejandro","Vizcarra",fecha2,"Jaca","656456456");
@@ -56,11 +57,14 @@ public class CrearDBSql {
 		arraySocio.add(auxSocio);
 		arraySocio.add(auxSocio1);
 		
-		Date fechaI=new Date(2010,05,18);
-		Date fechaF=new Date(2010,05,30);
 		
-		Date fechaI1=new Date(2006,06,18);
-		Date fechaF1=new Date(2006,06,30);
+		//Fechas para el quartet
+		
+		Date fechaI=new Date(1273576291000L);
+		Date fechaF=new Date(1274526691000L);
+		
+		Date fechaI1=new Date(1955790691000L);
+		Date fechaF1=new Date(1956481891000L);
 		
 		Quartet<Integer, Integer, Date, Date> auxPrestamo=new Quartet<Integer, Integer, Date, Date>(02, 02, fechaI, fechaF);
 
@@ -125,18 +129,75 @@ public class CrearDBSql {
 				insertarPrestamo.executeUpdate();
 			}
 			
-				
-			ResultSet rs= crearTablas.executeQuery("SELECT * FROM LIBRO");
-			System.out.println(rs.getInt("Código"));
-			System.out.println(rs.getString("Titulo"));
+		
+			// Listado de libros prestados actualmente.
 			
 			
+			ResultSet rsFecha=crearTablas.executeQuery("SELECT * FROM PRESTAMO");
+					
+			while (rsFecha.next()) {	
+				Date x=rsFecha.getDate("F_Fin_Prestamo");
+				Calendar hoyaux=Calendar.getInstance();
+				Date hoy=new Date(hoyaux.getTimeInMillis());
+				if(x.compareTo(hoy)>0) {
+					System.out.println("Libro prestado: Codigo: "+rsFecha.getInt("CódigoLibro")+"  Titulo: ");
+					ResultSet rsTituloLibro=crearTablas.executeQuery("SELECT Titulo FROM LIBRO where Código= "+rsFecha.getInt("CódigoLibro"));
+					System.out.println(rsTituloLibro.getString("Titulo"));
+					rsTituloLibro.close();
+				}
+			}
+			System.out.println("================================================================");
 			
-			
-		}catch(SQLException e) {
+			//Número de libros prestamos a un socio determinado.
+
+
+			ResultSet rsPrestar=crearTablas.executeQuery("SELECT * FROM PRESTAMO WHERE  CódigoSocio=2");
+
+			int cantidad=0;
+			while(rsPrestar.next()) {
+				cantidad++;
+			}
+			System.out.println("La cantidad de libros prestados a este socio es : "+cantidad);
+			rsPrestar.close();
+
+			System.out.println("================================================================");
+
+			//Libros que han superado la fecha de fin de préstamo.
+			ResultSet rsFinPrestado=crearTablas.executeQuery("SELECT * FROM PRESTAMO");
+
+			while (rsFinPrestado.next()) {	
+				Date x=rsFinPrestado.getDate("F_Fin_Prestamo");
+				Calendar hoyaux=Calendar.getInstance();
+				Date hoy=new Date(hoyaux.getTimeInMillis());
+				if(x.compareTo(hoy)<0) {
+					System.out.println("Libros superando la fecha de prestamo son: Codigo: "+rsFinPrestado.getInt("CódigoLibro")+"  Titulo: ");
+					ResultSet rsTituloLibro1=crearTablas.executeQuery("SELECT Titulo FROM LIBRO where Código= "+rsFinPrestado.getInt("CódigoLibro"));
+					System.out.println(rsTituloLibro1.getString("Titulo"));
+					rsTituloLibro1.close();
+				}
+			}
+			System.out.println("================================================================");
+
+
+			//  Socios que tienen libros que han superado la fecha de fin de préstamo.
+
+			ResultSet rsSociosFin=crearTablas.executeQuery("SELECT * FROM PRESTAMO");
+
+			while (rsSociosFin.next()) {	
+				Date x=rsSociosFin.getDate("F_Fin_Prestamo");
+				Calendar hoyaux=Calendar.getInstance();
+				Date hoy=new Date(hoyaux.getTimeInMillis());
+				if(x.compareTo(hoy)<0) {
+					System.out.println("Socios que han superado la fecha limite de prestamo: Codigo: "+rsSociosFin.getInt("CódigoSocio"));
+				}
+
+			}
+		}
+		catch(SQLException e) {
 			e.printStackTrace();
 		}
+
 	}
-	
+
 
 }
