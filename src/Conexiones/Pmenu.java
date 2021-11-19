@@ -43,6 +43,8 @@ public class Pmenu extends JFrame implements ActionListener {
 		
 		new Pmenu();
 	}
+	
+	//Método para que aparezca la lista en la interfaz gráfica
 	public void loadlist() {
 		try {
 			String query = "select * from personas1";
