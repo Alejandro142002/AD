@@ -43,22 +43,28 @@ public class Pmenu extends JFrame implements ActionListener {
 		
 		new Pmenu();
 	}
-	 public void loadlist() {
-		 try {
-	            String query = "select * from persona1";
-	            PreparedStatement pst = Conexion1.conectar().prepareStatement(query);
-	            ResultSet rs = rs = pst.executeQuery();
-	            while (rs.next()) {
-	                dm.addElement(rs.getString("nombre"));
-	            }
-	            lista.setModel(dm);
-	            pst.close();
-	            rs.close();
+	public void loadlist() {
+		try {
+			String query = "select * from personas1";
+			PreparedStatement pst = Conexion1.conectar().prepareStatement(query);
+			ResultSet rs =pst.executeQuery();
+			while (rs.next()) {
+				persona aux=new persona(rs.getString("nombre"), rs.getString("edad"));
+				
+				dlm.addElement(aux);
+		
+			}
+			
+			pst.close();
+			rs.close();
 
-	        } catch (SQLException throwables) {
-	            throwables.printStackTrace();
-	        }
-	 }	
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+	}
+
+	 
+	 //Creo la interfaz gráfica
 
 	public Pmenu() {
 
@@ -84,6 +90,7 @@ public class Pmenu extends JFrame implements ActionListener {
 
 		pack();
 		setVisible(true);
+		loadlist();
 	}
 
 	@Override
@@ -104,11 +111,8 @@ public class Pmenu extends JFrame implements ActionListener {
 			setVisible(true);
 		}
 	}
-
-	private void eliminar() {
-		// TODO Auto-generated method stub
-		
-	}
+//Le doy función al boton añadir para poder guardar las personas que quiera en la base de datos
+	
 	public void añadir() {
 		añadirframe = new JFrame();
 		añadirframe.setTitle("Personas");
@@ -133,7 +137,7 @@ public class Pmenu extends JFrame implements ActionListener {
 		dispose();
 
 	}
-
+//Le doy función al botón guardar para que lo inserte en la base de datos 
 	public void guardar() {
 
 		
@@ -166,19 +170,19 @@ public class Pmenu extends JFrame implements ActionListener {
 
 
 		}
-	
+	//Le doy función al botón eliminar y que elimine la persona que quiero de la base de datos
 
-	public void Eliminar() {
+	public void eliminar() {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             connection = Conexion1.conectar();
-            preparedStatement = connection.prepareStatement("DELETE FROM person WHERE nombre = ?");
-            preparedStatement.setString(1, String.valueOf(dm));
+            preparedStatement = connection.prepareStatement("DELETE FROM personas1 WHERE nombre = ?");
+            preparedStatement.setString(1, String.valueOf(dlm.get(lista.getSelectedIndex()).getNombre()));
             preparedStatement.executeUpdate();
 
-            System.out.println("Ha sido eliminado");
+            System.out.println("La persona selecionada se ha eliminado");
 
         } catch (Exception e) {
             e.printStackTrace();
