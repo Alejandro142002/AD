@@ -34,9 +34,11 @@ public class Pmenu extends JFrame implements ActionListener {
 	static DefaultListModel<persona> dlm;
 	DefaultListModel dm = new DefaultListModel();
 	static JButton añadir;
-	static JButton editar;
+
 	static JButton guardar;
 	static JButton eliminar;
+	static JButton OrdenarNombre;
+	static JButton OrdenarEdad;
 	static JList<persona> lista;
 
 	public static void main(String[] args)  {
@@ -66,7 +68,7 @@ public class Pmenu extends JFrame implements ActionListener {
 	}
 
 	 
-	 //Creo la interfaz gráfica
+	 //Creo la interfaz gráfica con todos los botones
 
 	public Pmenu() {
 
@@ -83,8 +85,18 @@ public class Pmenu extends JFrame implements ActionListener {
 		add(listaPosicion, BorderLayout.NORTH);
 		add(marco, BorderLayout.CENTER);
 
-		marco.add(editar = new JButton("Eliminar"));
-		editar.addActionListener(this);
+		marco.add(eliminar = new JButton("Eliminar"));
+		eliminar.addActionListener(this);
+		setLocation(850, 450);
+		setMinimumSize(new Dimension(400, 100));
+		
+		marco.add(OrdenarNombre = new JButton("Ordenar por Nombre"));
+		OrdenarNombre.addActionListener(this);
+		setLocation(850, 450);
+		setMinimumSize(new Dimension(400, 100));
+		
+		marco.add(OrdenarEdad = new JButton("Ordenar por Edad"));
+		OrdenarEdad.addActionListener(this);
 		setLocation(850, 450);
 		setMinimumSize(new Dimension(400, 100));
 
@@ -103,7 +115,18 @@ public class Pmenu extends JFrame implements ActionListener {
 			añadir();
 		}
 		if (botones.equals("Eliminar")) {
+			dm.clear();
 			eliminar();
+		}
+		if (botones.equals("Ordenar por Nombre")) {
+			dm.clear();
+			OrdenarNombre();
+			
+		}
+		if (botones.equals("Ordenar por Edad")) {
+			dm.clear();
+			OrdenarEdad();
+			
 		}
 		if (botones.equals("Guardar")) {
 			guardar();
@@ -172,7 +195,7 @@ public class Pmenu extends JFrame implements ActionListener {
 
 
 		}
-	//Le doy función al botón eliminar y que elimine la persona que quiero de la base de datos
+	//Le doy función al botón eliminar y que elimine la persona que quiero de la base de datos para ello hay que pinchar en la persona que se quiere eliminar
 
 	public void eliminar() {
         Connection connection = null;
@@ -204,6 +227,52 @@ public class Pmenu extends JFrame implements ActionListener {
                 }
             }
         }
+        
     }
+	//Aqui ordeno alfabeticamente los nombres que tengo en la tabla
+	public void OrdenarNombre() {
+		try {
+			Connection miConexion=Conexion1.conectar();
+
+
+			PreparedStatement mostrar=miConexion.prepareStatement("SELECT * FROM `personas1` ORDER BY nombre");
+			ResultSet rs =mostrar.executeQuery();
+
+			while(rs.next()) {
+				dm.addElement(rs.getString("nombre"));
+			}
+			lista.setModel(dm);
+			miConexion.close();
+
+		}catch(SQLException e) {
+			System.out.println("Excecpión "+e);
+		}
+
+
+	}
+	//Ordeno de menor a mayor todas las edades que tengo en la tabla 
+	public void OrdenarEdad() {
+		try {
+			Connection miConexion=Conexion1.conectar();
+
+
+			PreparedStatement mostrar=miConexion.prepareStatement("SELECT * FROM `personas1` ORDER BY edad");
+			ResultSet rs =mostrar.executeQuery();
+
+			while(rs.next()) {
+				dm.addElement(rs.getString("edad"));
+			}
+			lista.setModel(dm);
+
+			miConexion.close();
+		}catch(SQLException e) {
+			System.out.println("Excecpión "+e);
+		}
+		
+
+
+	}
+
 
 }
+

@@ -9,7 +9,7 @@ public class Conexion {
 	private static final String usuario="root";
 	private static final String clave="";
 	
-	public static Connection conectar1() {
+	public static Connection conectar1() throws SQLException {
 		
 		Connection conexion= null;
 		
@@ -17,14 +17,15 @@ public class Conexion {
 			conexion=DriverManager.getConnection(url,usuario,clave);
 			System.out.println("Conexión OK");
 			
+			
 		}catch(SQLException e) {
 			System.out.println("Error en la conexión");
 			
 		}
+		conexion.close();
 		return conexion;
 	}
 
-	
 	
 	
 
